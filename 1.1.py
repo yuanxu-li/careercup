@@ -17,9 +17,8 @@ def is_unique_1(string):
 			string_set.add(char)
 	return True
 
-# 
 def is_unique_2(string):
-	"""use no extra data structure but requires O(n^2) time
+	""" use in-place sort O(nlogn) and find if there is any adjacent neighbors
 	>>> is_unique_2("asdfghjklas")
 	False
 	>>> is_unique_2("asdf")
@@ -27,12 +26,13 @@ def is_unique_2(string):
 	>>> is_unique_2("")
 	True
 	"""
-	for i in range(len(string)):
-		cmp_char = string[i]
-		for j in range(i+1, len(string)):
-			if string[j] == cmp_char:
-				return False
+	string_list = list(string)
+	string_list.sort()
+	for i in range(1, len(string_list)):
+		if string_list[i] == string_list[i-1]:
+			return False
 	return True
+
 
 def main():
 	import doctest
