@@ -10,20 +10,22 @@ def URLify(string_list, length):
 	>>> URLify(list("Mr John Smith                                     "), 13)
 	'Mr%20John%20Smith'
 	"""
-	j = length
+	space_count = 0
 	for i in range(0, length):
 		if string_list[i] == " ":
-			string_list[j] = "%"
-			j += 1
-			string_list[j] = "2"
-			j += 1
-			string_list[j] = "0"
-			j += 1
+			space_count += 1
+	new_length = length + space_count * 2
+	for i in range(length - 1, -1, -1):
+		if string_list[i] == " ":
+			string_list[new_length - 1] = "0"
+			string_list[new_length - 2] = "2"
+			string_list[new_length - 3] = "%"
+			new_length -= 3
 		else:
-			string_list[j] = string_list[i]
-			j += 1
+			string_list[new_length - 1] = string_list[i]
+			new_length -= 1
 
-	return ''.join(string_list[length:j])
+	return "".join(string_list).strip()
 
 def main():
 	import doctest
