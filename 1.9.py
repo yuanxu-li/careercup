@@ -20,21 +20,7 @@ def is_string_rotation(s1, s2):
 	"""
 	if len(s1) != len(s2):
 		return False
-	i = 0
-	j = 0
-	while j < len(s2):
-		# if the two characters are the same, then move both i and j one step forward
-		if s2[j] == s1[i]:
-			i += 1
-			j += 1
-		# if the two characters are not the same
-		else:
-			i = 0
-			# if miss the first character, move j one step forward, otherwise keep j at the same place, for it is possible to match the first character
-			if i == 0:
-				j += 1
-
-	return is_substring(s1[i:], s2[:-i])
+	return is_substring(s2, s1 + s1)
 
 def main():
 	import doctest
