@@ -18,11 +18,14 @@ def zero_matrix(matrix):
 				row_indices.add(i)
 				column_indices.add(j)
 
-	for i in range(len(matrix)):
+	for i in row_indices:
 		for j in range(len(matrix[0])):
-			if i in row_indices or j in column_indices:
-				matrix[i][j] = 0
+			matrix[i][j] = 0
 
+	for i in range(len(matrix)):
+		for j in column_indices:
+			matrix[i][j] = 0
+	
 	return matrix
 
 def main():
