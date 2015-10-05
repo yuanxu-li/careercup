@@ -24,6 +24,32 @@ def rotate_matrix(matrix):
 
 	return matrix
 
+def rotate_matrix_modified(matrix):
+	""" Rotate a matrix with a layer-by-layer approach
+	>>> rotate_matrix_modified([[1,2,3],[4,5,6],[7,8,9]])
+	[[7, 4, 1], [8, 5, 2], [9, 6, 3]]
+	>>> rotate_matrix_modified([])
+	[]
+	"""
+	length = len(matrix)
+
+	for layer in range(int(length / 2)):
+		for i in range(length - 1 - layer):
+			# left, top, right, bottom <- bottom, left, top, right
+			offset = layer + i
+			matrix[length - 1 - offset][layer],\
+			matrix[layer][offset],\
+			matrix[offset][length - 1 - layer],\
+			matrix[length - 1 - layer][length - 1 - offset]\
+			=\
+			matrix[length - 1 - layer][length - 1 - offset],\
+			matrix[length - 1 - offset][layer],\
+			matrix[layer][offset],\
+			matrix[offset][length - 1 - layer]
+
+	return matrix
+
+
 def main():
 	import doctest
 	doctest.testmod()
