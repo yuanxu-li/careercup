@@ -189,29 +189,16 @@ class LinkedList:
 	# EXAMPLE
 	# Input: the node c from the linked list a -> b -> c -> d -> e
 	# Result: nothing is returned, but the new linked list looks like a -> b -> d -> e
-	def delete_middle_node(self):
+	def delete_middle_node(self, node):
 		""" delete the middle node
 		>>> linked_list = LinkedList([1,4,2,5])
-		>>> linked_list.delete_middle_node()
+		>>> linked_list.delete_middle_node(linked_list.return_k_to_last(3))
 		>>> linked_list.return_list()
-		[1, 4, 5]
+		[1, 2, 5]
 		"""
-		if self.head is None:
-			return
-		length = self.size()
-		current = self.head
-		previous = None
-		count = 0
-		while count < int(length / 2) and current is not None:
-			previous = current
-			current = current.next
-			count += 1
-		if current is None:
-			raise Exception("cannot find middle node!")
-		elif previous is None:
-			self.head = current.next
-		else:
-			previous.next = current.next
+		node.data = node.next.data
+		node.next = node.next.next
+
 
 	# 2.4 Partition: Write code to partition a linked list around a value x, such that
 	# all nodes less than x come before all nodes greater than or equal to x. If x is
