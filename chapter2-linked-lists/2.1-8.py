@@ -167,47 +167,38 @@ class LinkedList:
 		>>> print(linked_list.return_k_to_last(4))
 		1
 		>>> print(linked_list.return_k_to_last(5))
-		1
+		None
 		>>> linked_list = LinkedList()
 		>>> print(linked_list.return_k_to_last(1))
 		None
 		"""
-		index = self.size() - k
-		cursor = self.head
-		count = 0
-		while count < index:
-			count += 1
-			cursor = cursor.next
-		return cursor
+		cursor1 = self.head
+		cursor2 = self.head
+		for i in range(k):
+			if cursor1 is not None:
+				cursor1 = cursor1.next
+			else:
+				return None
+		while cursor1 is not None:
+			cursor1 = cursor1.next
+			cursor2 = cursor2.next
+		return cursor2
 
 	# 2.3 Delete Middle Node: Implement an algorithm to delete a node in the middle
 	# of a single linked list, given only access to that node
 	# EXAMPLE
 	# Input: the node c from the linked list a -> b -> c -> d -> e
 	# Result: nothing is returned, but the new linked list looks like a -> b -> d -> e
-	def delete_middle_node(self):
-		""" delete the middle node
+	def delete_middle_node(self, node):
+		""" delete the middle, with the exclusion of the last node
 		>>> linked_list = LinkedList([1,4,2,5])
-		>>> linked_list.delete_middle_node()
+		>>> linked_list.delete_middle_node(linked_list.return_k_to_last(3))
 		>>> linked_list.return_list()
-		[1, 4, 5]
+		[1, 2, 5]
 		"""
-		if self.head is None:
-			return
-		length = self.size()
-		current = self.head
-		previous = None
-		count = 0
-		while count < int(length / 2) and current is not None:
-			previous = current
-			current = current.next
-			count += 1
-		if current is None:
-			raise Exception("cannot find middle node!")
-		elif previous is None:
-			self.head = current.next
-		else:
-			previous.next = current.next
+		node.data = node.next.data
+		node.next = node.next.next
+
 
 	# 2.4 Partition: Write code to partition a linked list around a value x, such that
 	# all nodes less than x come before all nodes greater than or equal to x. If x is
@@ -218,49 +209,26 @@ class LinkedList:
 	# Output: 3 -> 1 -> 2 -> 10 -> 5 -> 5 -> 8
 	def partition(self, x):
 		""" partition the linked list around a given value x, such that all values less than x come before values
-		greater than or equal to x
+		greater than or equal to x. grow the list at the head and tail
 		>>> linked_list = LinkedList([3,5,8,5,10,2,1])
 		>>> linked_list.partition(5)
 		>>> linked_list.return_list()
-		[3, 1, 2, 5, 8, 5, 10]
+		[1, 2, 3, 5, 8, 5, 10]
 		"""
-		if self.head is None:
-			return self
-		# find the insert point, which will be represented as cursor
-		previous = None
-		current = self.head
-		while current is not None and current.data < x:
-			previous = current
-			current = current.next
-		# if all nodes are less than x, return as it is
-		if current is None:
-			return
-		else:
-			cursor = previous
-
-		# create a virtual node, to make it consistent, which will be deleted afterwards
-		virtual_node = False
-		if cursor is None:
-			M = x - 1000
-			self.insert(M)
-			cursor = self.head
-			virtual_node = True
-		# looping over the rest of list to append the nodes less than x to the cursor
-		previous = cursor.next
-		current = previous.next
-		while current is not None:
-			if current.data < x:
-				# delete current
-				previous.next = current.next
-				# append current to cursor
-				current.next = cursor.next
-				cursor.next = current
-				current = previous.next
+		head = self.head
+		tail = self.head
+		cursor = self.head
+		while cursor is not None:
+			next = cursor.next
+			if cursor.data < x:
+				cursor.next = head
+				head = cursor
 			else:
-				previous = current
-				current = current.next
-		if virtual_node:
-			self.head = self.head.next
+				tail.next = cursor
+				tail = cursor
+			cursor = next
+		tail.next = None
+		self.head = head
 
 	# 2.5 Sum Lists: You have two numbers represented by a linked list, where each node contains
 	# a single digit. The digits are stored in reverse order, such that the 1's digit is at the
@@ -355,6 +323,38 @@ class LinkedList:
 		reverse_list.reverse()
 		return self == reverse_list
 
+	def is_palindrome_modified(self, length=None):
+		""" check if is palindrome recursively
+		>>> LinkedList([1, 2, 2, 1]).is_palindrome_modified()[1]
+		True
+		>>> LinkedList().is_palindrome_modified()[1]
+		True
+		>>> LinkedList([1, 2, 4, 2, 4]).is_palindrome_modified()[1]
+		False
+		"""
+		# calculate length of this list if not provided (usually from outmost call)
+		if length is None:
+			length = self.size()
+
+		# base case
+		if length == 0 or self.head is None:
+			return self.head, True
+		elif length == 1:
+			return self.head.next, True
+
+		# recursive case
+		result_node, result = LinkedList(head=self.head.next).is_palindrome_modified(length - 2)
+		if result_node is None:
+			return result_node, False
+		if result is False:
+			return result_node.next, False
+		if result_node.data == self.head.data:
+			return result_node.next, True
+		else:
+			return result_node.next, False
+			
+
+
 	# 2.7 Intersection: Given two (singly) linked lists, determine if the two lists intersect.
 	# Return the intersecting node. Note that the intersection is defined based on reference, not value.
 	# That is, if the kth node of the first linked list is the exact same node (by reference) as the jth
@@ -385,6 +385,64 @@ class LinkedList:
 			else:
 				cursor = cursor.next
 		return None
+
+	def intersection_modified(self, other):
+		""" chop off the longer list to make them start at the same distance from the possible intersecting node
+		>>> shared_list = LinkedList([1, 2, 3, 4, 5])
+		>>> l1 = LinkedList(head=shared_list.head)
+		>>> l2 = LinkedList(head=shared_list.head)
+		>>> l1.insert(4)
+		>>> l1.insert(5)
+		>>> l2.insert(4)
+		>>> print(l1.intersection_modified(l2))
+		1
+		"""
+		if self.head is None or other.head is None:
+			return None
+
+		# get the length and tail of list 1
+		current = self.head
+		count = 1
+		while current.next is not None:
+			count += 1
+			current = current.next
+		length1 = count
+		tail1 = current
+
+		# get the length and tail of list 2
+		current = other.head
+		count = 1
+		while current.next is not None:
+			count += 1
+			current = current.next
+		length2 = count
+		tail2 = current
+
+		# if the two lists have different tails, then they cannot never intersect with each other
+		if tail1 != tail2:
+			return None
+
+		p1 = self.head
+		p2 = other.head
+		if length1 > length2:
+			for i in range(length1 - length2):
+				p1 = p1.next
+		else:
+			for i in range(length2 - length1):
+				p2 = p2.next
+
+		while p1 != p2 and p1 is not None and p2 is not None:
+			p1 = p1.next
+			p2 = p2.next
+
+		if p1 is None or p2 is None:
+			return None
+		else:
+			return p1
+
+
+
+
 
 	# 2.8 Loop Detection: Given a circular linked list, implement an algorithm that returns the node
 	# at the beginning of the loop
