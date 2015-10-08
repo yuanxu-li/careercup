@@ -46,19 +46,26 @@ class MyQueue:
 	2
 	"""
 	def __init__(self):
-		self.stack1 = Stack()
-		self.stack2 = Stack()
+		self.old_stack = Stack()
+		self.new_stack = Stack()
+
 	def enqueue(self, data):
-		self.stack1.push(data)
+		self.new_stack.push(data)
+	
 	def dequeue(self):
-		if self.stack1.peek() is None:
-			raise Exception("out of bound!")
-		while self.stack1.peek() is not None:
-			self.stack2.push(self.stack1.pop())
-		to_be_returned = self.stack2.pop()
-		while self.stack2.peek() is not None:
-			self.stack1.push(self.stack2.pop())
-		return to_be_returned
+		if self.old_stack.peek() is None:
+			self.shift_stack()
+		if self.old_stack.peek() is None:
+			raise Exception("Empty")
+		else:
+			return self.old_stack.pop()
+
+	def shift_stack(self):
+		while self.new_stack.peek() is not None:
+			self.old_stack.push(self.new_stack.pop())
+
+
+
 
 if __name__ == "__main__":
 	import doctest
