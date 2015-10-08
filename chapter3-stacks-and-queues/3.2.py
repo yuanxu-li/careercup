@@ -50,7 +50,10 @@ class Stack:
 			return self.top.data
 
 	def min(self):
-		return self.top.min
+		if self.top is None:
+			raise Exception("min of None")
+		else:
+			return self.top.min
 
 	def is_empty(self):
 		return self.top is None
