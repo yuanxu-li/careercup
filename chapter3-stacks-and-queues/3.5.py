@@ -76,6 +76,37 @@ class Stack:
 		while upper_stack.peek() is not None:
 			self.push(upper_stack.pop())
 
+	def sort_modified(self):
+		"""
+		time complexity: O(n^2)
+		>>> s = Stack()
+		>>> s.push(2)
+		>>> s.push(1)
+		>>> s.push(3)
+		>>> s.push(4)
+		>>> s.push(0)
+		>>> s.sort_modified()
+		>>> s.pop()
+		0
+		>>> s.pop()
+		1
+		>>> s.pop()
+		2
+		>>> s.pop()
+		3
+		>>> s.pop()
+		4
+		"""
+		extra = Stack()
+		while not self.is_empty():
+			temp = self.pop()
+			while not extra.is_empty() and extra.peek() < temp:
+				self.push(extra.pop())
+			extra.push(temp)
+		self.top = extra.top
+
+
+
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
