@@ -76,6 +76,90 @@ class AnimalShelter:
 			self.animals.append(temp_shelter.animals.popleft())
 		return return_cat
 
+class AnimalModified:
+	def __init__(self, name):
+		self._name = name
+	def __str__(self):
+		return str(self._name)
+	def set_order(self, order):
+		self._order = order
+	def get_order(self):
+		return self._order
+
+class Dog(AnimalModified):
+	def __init__(self, name):
+		super(Dog, self).__init__(name)
+
+class Cat(AnimalModified):
+	def __init__(self, name):
+		super(Cat, self).__init__(name)
+
+class AnimalShelterModified:
+	"""
+	>>> as_ = AnimalShelterModified()
+	>>> as_.enqueue(Dog("Justin1"))
+	>>> as_.enqueue(Cat("Justin2"))
+	>>> as_.enqueue(Dog("Justin3"))
+	>>> as_.enqueue(Dog("Justin4"))
+	>>> print(as_.dequeueCat())
+	Justin2
+	>>> print(as_.dequeueAny())
+	Justin1
+	>>> print(as_.dequeueCat())
+	None
+	>>> print(as_.dequeueDog())
+	Justin3
+	"""
+	def __init__(self):
+		self.dogs = deque()
+		self.dog_size = 0
+		self.cats = deque()
+		self.cat_size = 0
+		self.order = 0
+
+	def enqueue(self, animal):
+		if type(animal).__name__ == "Dog":
+			animal.set_order(self.order)
+			self.order += 1
+			self.dogs.appendleft(animal)
+			self.dog_size += 1
+		elif type(animal).__name__ == "Cat":
+			animal.set_order(self.order)
+			self.order += 1
+			self.cats.appendleft(animal)
+			self.cat_size += 1
+
+	def dequeueAny(self):
+		if self.cat_size == 0:
+			return self.dequeueDog()
+		elif self.dog_size == 0:
+			return self.dequeueCat()
+		else:
+			dog = self.dequeueDog()
+			cat = self.dequeueCat()
+			if dog.get_order() < cat.get_order():
+				self.cats.append(cat)
+				self.dog_size -= 1
+				return dog
+			else:
+				self.dogs.append(dog)
+				self.cat_size -= 1
+				return cat
+
+	def dequeueCat(self):
+		if self.cat_size == 0:
+			return None
+		else:
+			self.cat_size -= 1
+			return self.cats.pop()
+
+	def dequeueDog(self):
+		if self.dog_size == 0:
+			return None
+		else:
+			self.dog_size -= 1
+			return self.dogs.pop()
+
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
