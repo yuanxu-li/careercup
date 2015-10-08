@@ -122,6 +122,60 @@ class ThreeStacks:
 	def is_empty3(self):
 		return self.head3 >= self.tail3
 
+class MultiStack:
+	"""
+	>>> ms = MultiStack()
+	>>> ms.push(1, 11)
+	>>> ms.push(1, 12)
+	>>> ms.push(1, 13)
+	>>> ms.push(2, 21)
+	>>> ms.push(2, 22)
+	>>> ms.push(0, 31)
+	>>> ms.push(0, 32)
+	>>> ms.pop(1)
+	13
+	>>> ms.pop(2)
+	22
+	>>> ms.peek(2)
+	21
+	"""
+	def __init__(self, num_of_stacks=3, stack_size=5):
+		self.values = [None for i in range(num_of_stacks * stack_size)]
+		self.sizes = [0 for i in range(num_of_stacks)]
+		self.capacity = stack_size
+
+	def push(self, stack_num, data):
+		if self.is_full(stack_num):
+			raise Exception("stack " + str(stack_num) + " full!")
+		else:
+			self.sizes[stack_num] += 1
+			self.values[self.index_of_tail(stack_num)] = data
+
+	def pop(self, stack_num):
+		if self.is_empty(stack_num):
+			raise Exception("stack " + str(stack_num) + " empty!")
+		else:
+			value = self.values[self.index_of_tail(stack_num)]
+			self.sizes[stack_num] -= 1
+			return value
+
+	def peek(self, stack_num):
+		if self.is_empty(stack_num):
+			return None
+		else:
+			return self.values[self.index_of_tail(stack_num)]
+
+	def is_full(self, stack_num):
+		return self.sizes[stack_num] == self.capacity
+
+	def is_empty(self, stack_num):
+		return self.sizes[stack_num] == 0
+
+	def index_of_tail(self, stack_num):
+		return stack_num * self.capacity + self.sizes[stack_num] - 1
+
+
+
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
