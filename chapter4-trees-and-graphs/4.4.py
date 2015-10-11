@@ -6,15 +6,28 @@ class Node:
 		self.left = None
 		self.right = None
 
-	def height(self):
+	def check_height(self):
 		if self.left is None and self.right is None:
-			return 1
+			return 0
 		elif self.left is None:
-			return 1 + self.right.height()
+			right_height = self.right.check_height()
+			if right_height != 0:
+				return -1
+			else:
+				return 1
 		elif self.right is None:
-			return 1 + self.left.height()
+			left_height = self.left.check_height()
+			if left_height != 0:
+				return -1
+			else:
+				return 1
 		else:
-			return 1 + max(self.left.height(), self.right.height())
+			left_height = self.left.check_height()
+			right_height = self.right.check_height()
+			if left_height == -1 or right_height == -1 or abs(left_height - right_height) > 1:
+				return -1
+			else:
+				return 1 + max(left_height, right_height)
 
 	def is_balanced(self):
 		"""
@@ -41,17 +54,10 @@ class Node:
 		>>> n0.is_balanced()
 		False
 		"""
-		if self.left is None:
-			left_height = 0
+		if self.check_height() != -1:
+			return True
 		else:
-			left_height = self.left.height()
-
-		if self.right is None:
-			right_height = 0
-		else:
-			right_height = self.right.height()
-
-		return abs(left_height - right_height) <= 1
+			return False
 
 if __name__ == "__main__":
 	import doctest
