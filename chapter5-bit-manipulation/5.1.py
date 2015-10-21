@@ -11,7 +11,7 @@
 import pdb
 
 def insert(M, N, i, j):
-	""" Insert M into N between the bits from i to j, by masking the bits between i and j and then inserting M
+	""" Insert M into N between the bits from i to j, by masking the bits between i and j and then merging M in
 	>>> insert(binary_to_int("10011"), binary_to_int("10000000000"), 2, 6)
 	'10001001100'
 	"""
