@@ -11,20 +11,21 @@ def longest_sequence(x):
 	"""
 	previous = 0
 	current = 0
-	max = 0
+	longest = 0
 	if x & 1 == 1:
 		current = 1
 
 	while x != 0 and x != -1:
 		x >>= 1
 		if x & 1 == 0:
-			if previous != 0 and current != 0:
-				max = previous + current + 1 if previous + current + 1 > max else max
+			if previous != 0 or current != 0:
+				longest = max(previous + current + 1, longest)
 			previous = current
 			current = 0
 		else:
 			current += 1
-	return max
+
+	return max(longest, previous + current + 1)
 
 if __name__ == "__main__":
 	import doctest
