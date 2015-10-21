@@ -10,13 +10,16 @@ def binary_to_string(f):
 	>>> binary_to_string(0.72)
 	ERROR
 	>>> binary_to_string(0.25)
-	'01'
+	'.01'
 	>>> binary_to_string(0.6)
 	ERROR
 	>>> binary_to_string(0.375)
-	'011'
+	'.011'
 	"""
-	l = []
+	if f > 1 or f < 0:
+		print("ERROR")
+		return
+	l = ["."]
 	while f > 0 and len(l) <= 32:
 		f *= 2
 		if f >= 1:
