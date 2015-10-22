@@ -25,19 +25,28 @@ def draw_line(screen, width, x1, x2, y):
 	x2_ind = y * (width // 8) + x2 // 8
 	x2_offset = x2 % 8
 
-	# pdb.set_trace()
-	# fix the byte of x1
-	mask = (1 << (8 - x1_offset)) - 1
-	screen[x1_ind] |= mask
+
 
 	# fix the bytes between x1 and x2
 	for ind in range(x1_ind + 1, x2_ind):
 		screen[ind] = 255
 
-	# fix the byte of x2
-	mask = (1 << (x2_offset + 1)) - 1
-	mask <<= (8 - x2_offset - 1)
-	screen[x2_ind] |= mask
+	# if x1 and x2 are in different bytes
+	if x1_ind != x2_ind:
+		# fix the byte of x1
+		mask = (1 << (8 - x1_offset)) - 1
+		screen[x1_ind] |= mask
+		# fix the byte of x2
+		mask = (1 << (x2_offset + 1)) - 1
+		mask <<= (8 - x2_offset - 1)
+		screen[x2_ind] |= mask
+	# if x1 and x2 are in the same byte
+	else:
+		mask1 = (1 << (8 - x1_offset)) - 1
+		mask2 = (1 << (x2_offset + 1)) - 1
+		mask2 <<= (8 - x2_offset - 1)
+		screen[x1_ind] |= (mask1 & mask2)
+
 
 if __name__ == "__main__":
 	import doctest
