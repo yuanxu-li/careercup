@@ -4,7 +4,9 @@
 def swap_odd_even_bits(x):
 	""" We can get the odd and even bits separately and move them into the right place, and then merge them back
 	>>> swap_odd_even_bits(3456)
+	3648
 	>>> swap_odd_even_bits(24623)
+	36895
 	"""
 	return ((x & 0xaaaaaaaa) >> 1) | ((x & 0x55555555) << 1)
 
