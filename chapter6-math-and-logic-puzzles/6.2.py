@@ -7,12 +7,12 @@
 
 # p1 = p
 # p2 = 3 * p^2 * (1-p) + p^3
-# 	 = p^2 * (3-p)
+# 	 = 3 * p^2 - 2 * p^3
 
 # When we choose game 1 over game 2, p1 > p2, which leads to:
-# => p > p^2 * (3-p)
+# => p > 3 * p^2 - 2 * p^3
 # since 0 < p < 1,
-# => p < (3+sqrt(5))/2
+# => 0 < p < 0.5
 
-# Similarly, when we choose game 2 over game1, we shall have p < (3+sqrt(5))/2,
-# and when we choose either game, we shall have p = (3+sqrt(5))/2
+# Similarly, when we choose game 2 over game1, we shall have 0.5 < p < 1,
+# and when we choose either game, we shall have p = 0.5
