@@ -8,4 +8,4 @@
 # When we have n ants on n-vertex polygon, we have 2^n arrangements for each ant has
 # 2 directions to choose from. However, only 2 arrangements will not lead to collision,
 # clockwise and anti-clockwise. Then the probability is:
-# p = 2 / 2^n = 2^(1-n)
+# p = 1 - 2 / 2^n = 1 - 2^(1-n)
