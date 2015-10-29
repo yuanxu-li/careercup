@@ -13,62 +13,47 @@ def brute_force():
 	n = random.randint(0, 100)
 	for i in range(100):
 		if i == n:
-			return i
+			return i 
 
-def brute_binary_search():
-	""" We use the first egg to do binary search, which is the most efficient. Once we
-	break it, we use the second egg to do brute force search from low to high in the
-	range which is determined by the previous binary search.
+drops = 0
+break_floor = 20
+def drop(floor):
+	global drops
+	drops += 1
+	return floor >= break_floor
 
-	Because we only have one egg left, we have to do brute force, that is, checking one
-	by one, for that is our last and only chance.
-
-	Then the number of drops for the worse case is 50, if the first drop in the middle
-	breaks the egg.
+def find_breaking_floor(k):
+	""" When we use egg1, we could skip floors each time and reduce the range, like when we drop egg1 from 10th floor it is Ok,
+	but broken from 20th floor, then we should search from 11th floor through 19th floor using egg2. Because egg2 is our last choice,
+	we should use the safest linear search. Then how should we minimize the total number of drops for the worst case?
+	The idea to keep drops(egg1) + drops(egg2) steady, meaning to keep the worst case almost the same as the best case. Then each time
+	we drop egg1 one more time adding drop(egg1) by 1, we should reduce the increment by 1 thus reducing drop(egg2) by 1.
+	>>> find_breaking_floor(30)
+	30
+	>>> find_breaking_floor(50)
+	50
+	>>> find_breaking_floor(70)
+	70
 	"""
-	n = random.randint(0, 100)
-	low = 0
-	high = 99
-	first_broken = False
-	# use the first egg to do binary search
-	while low <= high and not first_broken:
-		mid = int((low+high)/2)
-		if mid == n:
-			return mid
-		elif mid < n:
-			low = mid + 1
-		else:
-			high = mid
-			first_broken = True
+	global break_floor
+	global drops
+	break_floor = k
+	interval = 14
+	previous = 0
+	egg1 = interval
+	drops += 1
+	# drop egg1
+	while not drop(egg1) and egg1 <= 100:
+		interval -= 1
+		previous = egg1
+		egg1 += interval
+	# drop egg2
+	egg2 = previous + 1
+	while egg2 < egg1 and egg2 <= 100 and not drop(egg2):
+		egg2 += 1
 
-	# use the second egg to do brute force search in [low, high]
-	for i in range(low, high+1):
-		if i == n:
-			return i
+	return -1 if egg2 > 100 else egg2
 
-def brute_binary_search_optimized():
-	"""
-	However, 50 still seems a large number to us. Seems that we spend too much time
-	brute-force searching the lower part. Is it possible that we move the first
-	check a little downwards so that 50 will be decreased? Sure, but how much?
-
-	Assume the first drop floor is k.
-
-	Let's observe the first drop. If it succeeds, the worst case is decided by how many
-	times we do the binary search in the upper part, e.g. the depth of BST constructred
-	by the upper part, which is int(log2(100-k)). If it succeeds, the worst case is decided
-	by how many floors are in the lower part, which is k.
-
-	Because we do not know whether it shall succeed or fail, we should consider both and
-	try to reduce both.
-	>>> brute_binary_search_optimized()
-	"""
-
-	worst_case_num_of_drops = [max(k, math.ceil(math.log2(100-k))) for k in range(100)]
-	minimized_num_of_drops = min(worst_case_num_of_drops)
-	N = worst_case_num_of_drops.index(minimized_num_of_drops)
-	pdb.set_trace()
-	return N, minimized_num_of_drops
 
 if __name__ == "__main__":
 	import doctest
