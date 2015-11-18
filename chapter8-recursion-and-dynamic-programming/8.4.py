@@ -17,6 +17,28 @@ def power_set(s, memo=None):
 	if returned == True:
 		return memo
 
+def power_set_updated(s):
+	"""
+	Actually the previous method is a top-down approach, and now let's consider a bottom-up approach. Since it is 
+	bottom-up, we do not have to worry about the duplicated cases and thus can ignore memo. We start from
+	when set size is 0, 1, 2, up to n.
+	>>> power_set_updated(set([1,2,3,4,5]))
+	"""
+	# base case
+	if len(s) == 0:
+		return [set()]
+	# recursive case
+	item = s.pop()
+	all_subsets = power_set_updated(s)
+	more_subsets = []
+	for subset in all_subsets:
+		new_subset = subset.copy()
+		new_subset.add(item)
+		more_subsets.append(new_subset)
+	all_subsets.extend(more_subsets)
+	return all_subsets
+
+
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
