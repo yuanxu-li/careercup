@@ -39,6 +39,33 @@ def magic_index_nondistinct(array):
 			return index
 	return None
 
+def magic_index_nondistinct_updated(array, start=None, end=None):
+	""" It is actually possible to reduce the search space by comparing the middle index and value.
+	>>> magic_index_nondistinct_updated([-1, 0, 2, 4, 5])
+	2
+	"""
+	if start is None or end is None:
+		start = 0
+		end = len(array) - 1
+
+	if start > end:
+		return None
+	mid = int((start + end) / 2)
+	if mid == array[mid]:
+		return mid
+	# search left
+	left = magic_index_nondistinct_updated(array, start, min(mid-1, array[mid]))
+	if left is not None:
+		return left
+	# search right
+	right = magic_index_nondistinct_updated(array, max(mid+1, array[mid]))
+	if right is not None:
+		return right
+	# if nothing is found
+	return None
+
+
+
 
 if __name__ == "__main__":
 	import doctest
