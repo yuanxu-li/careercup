@@ -53,6 +53,37 @@ def bit_length(num):
 		l += 1
 	return l
 
+
+def multiply_recursive_updated(x, y):
+	""" Make sure x is always not greater than y as inputs
+	Example: to compute 20 * 45, we recursively compute 10 * 25, and add it to itself as the result;
+	to compute 19 * 45, we recursively compute 9 * 45, add it to itself, and add 45 the larger number to it as the result;
+	base case is 1 * y or 0 * y.
+	By reducing x the smaller number instead of y the larger number, we save time by reaching the base case faster.
+	>>> multiply_recursive_updated(4, 18)
+	72
+	>>> multiply_recursive_updated(38, 41)
+	1558
+	>>> multiply_recursive_updated(1001, 1002)
+	1003002
+	"""
+	# base case
+	if x == 0:
+		return 0
+	elif x == 1:
+		return y
+
+	# recursive case
+	temp_x = x >> 1
+	half_prod = multiply_recursive_updated(temp_x, y)
+	if x % 2 == 0:
+		return half_prod + half_prod
+	else:
+		return half_prod + half_prod + y
+
+
+
+
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
