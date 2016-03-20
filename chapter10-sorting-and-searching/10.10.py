@@ -38,12 +38,12 @@ class Node:
 		self.value = value
 		self.left = None
 		self.right = None
-		self.size = 1
+		self.left_size = 0
 
 	def insert(self, value):
-		self.size += 1
 		# left branch
 		if value <= self.value:
+			self.left_size += 1
 			if self.left is None:
 				self.left = Node(value)
 			else:
@@ -56,12 +56,9 @@ class Node:
 				self.right.insert(value)
 
 	def get_rank(self, value):
-		# print(self.value)
+		# this node
 		if value == self.value:
-			if self.left is None:
-				return 0
-			else:
-				return self.left.size
+			return self.left_size
 		# left branch
 		elif value < self.value:
 			if self.left is None:
@@ -76,7 +73,7 @@ class Node:
 				right_rank = self.right.get_rank(value)
 				if right_rank != -1:
 					# pdb.set_trace()
-					return self.left.size + 1 + right_rank if self.left else 1 + right_rank
+					return self.left_size + 1 + right_rank
 				else:
 					return -1
 

@@ -28,6 +28,44 @@ def peaks_and_valleys(arr):
 		arr2.append(arr[i])
 	return arr2
 
+def peaks_and_valleys_swap(arr):
+	"""
+	The idea is also to sort the array in the first place. Then we iterate through the array,
+	jumping two elements and swapping them at a time. Since every three elements satisfy
+	"small <= medium <= large", swapping them will make "medium >= small <= large", and medium
+	becomes a peak and small becomes a valley
+	>>> peaks_and_valleys_swap([5, 8, 6, 2, 3, 4, 6])
+	[3, 2, 5, 4, 6, 6, 8]
+	"""
+	arr.sort()
+	for i in range(1, len(arr), 2):
+		arr[i], arr[i-1] = arr[i-1], arr[i]
+	return arr
+
+def peaks_and_valleys_optimal(arr):
+	""" we do not have to sort the array at all. Note that as long as we put peaks in the right places,
+	all valleys will be already in the right places. Then we iterate through the array, jumping
+	two elements at a time, putting the largest element among the three in the middle to make a peak
+	>>> peaks_and_valleys_optimal([5, 8, 6, 2, 3, 4, 6])
+	[5, 8, 2, 6, 3, 6, 4]
+	"""
+	# if the length of array <= 2, it is naturally a sorted array
+	if len(arr) <= 2:
+		return arr
+	for i in range(1, len(arr)-1, 2):
+		# middle is max
+		if arr[i] >= arr[i-1] and arr[i] >= arr[i+1]:
+			continue
+		# left is max
+		elif arr[i-1] >= arr[i] and arr[i-1] >= arr[i+1]:
+			arr[i-1], arr[i] = arr[i], arr[i-1]
+		# right is max
+		else:
+			arr[i+1], arr[i] = arr[i], arr[i+1]
+	return arr
+
+
+
 if __name__ == "__main__":
 	import doctest
 	doctest.testmod()
